@@ -1,0 +1,59 @@
+<html>
+	<head>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>		
+			var socket = io.connect();
+			
+			socket.on('connect', function() {
+				console.log("Connected");
+				socket.emit('who', 'pi');
+			});
+			
+			// This is a stand-in for the pi's image acquisition
+			// The important part is this:
+			// 	socket.emit('image', dataUrl);
+
+			
+			var initWebRTC = function() {
+			
+				// These help with cross-browser functionality
+				window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+				navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+				
+				// The video element on the page to display the webcam
+				var video = document.getElementById('thevideo');
+
+				// if we have the method
+				if (navigator.getUserMedia) {
+					navigator.getUserMedia({video: true}, function(stream) {
+							video.src = window.URL.createObjectURL(stream) || stream;
+							video.play();
+							
+						var thecanvas = document.getElementById('thecanvas');
+						var thecontext = thecanvas.getContext('2d');
+				
+						var draw = function() {
+							console.log("draw");
+							thecontext.drawImage(video,0,0,video.width,video.height);
+							var dataUrl = thecanvas.toDataURL('image/webp', 1);
+							socket.emit('image', dataUrl);
+							setTimeout(draw,1000/30);
+						};
+						draw();			
+							
+						}, function(error) {alert("Failure " + error.code);});							
+				}
+			};
+			
+			
+		
+		</script>
+	</head>
+	<body onload="initWebRTC();">
+				
+		Video: <video id="thevideo" width="320" height="240" autoplay></video>
+		Canvas: <canvas id="thecanvas" width="320" height="240"></canvas>
+		
+	</body>
+</html>
+

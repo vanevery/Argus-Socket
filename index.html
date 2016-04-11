@@ -1,0 +1,67 @@
+<html>
+	<head>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>	
+			var socket = io.connect();
+			
+			socket.on('connect', function() {
+				console.log("Connected");
+				socket.emit('who', 'web');
+			});
+								
+			// Array to hold pi_ids
+			var pis = [];		
+			socket.on('pis', function(data) {
+				console.log(data);
+				pis = data;
+				
+				// Give us 0 high speed
+				if (pis.length > 0) {
+					socket.emit('highquality',pis[0]);
+				}
+			});			
+
+			// Array for images on page
+			var images = [];	
+			
+			function init() {
+				for (var i = 0; i < 10; i++) {
+					images.push(document.getElementById("image"+i));
+				}
+				console.log(images);
+			}
+			window.addEventListener('load', init);
+
+			
+			socket.on('image', function(data) {
+				console.log(data);
+				//  Match to the right image, shared array index
+				//  A bit lazy
+				for (var i = 0; i < pis.length; i++) {
+					if (data.pi_id == pis[i]) {
+						console.log("matched " + i);
+						images[i].src = data.imagedata;					
+						break;
+					}
+				}
+			});
+						
+			
+		
+		</script>
+	</head>
+	<body>
+		<img src="" id="image0">
+		<img src="" id="image1">
+		<img src="" id="image2">
+		<img src="" id="image3">
+		<img src="" id="image4">
+		<img src="" id="image5">
+		<img src="" id="image6">
+		<img src="" id="image7">
+		<img src="" id="image8">
+		<img src="" id="image9">
+				
+	</body>
+</html>
+
