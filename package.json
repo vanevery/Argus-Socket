@@ -1,0 +1,25 @@
+{
+  "name": "argus-socket",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "datauri": "^1.0.4",
+    "socket.io": "^1.4.5",
+    "socket.io-client": "^1.4.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vanevery/Argus-Socket.git"
+  },
+  "author": "Shawn Van Every",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vanevery/Argus-Socket/issues"
+  },
+  "homepage": "https://github.com/vanevery/Argus-Socket#readme"
+}
